@@ -1,6 +1,7 @@
 let express = require('express');
 let server = express();
 let bd = require('body-parser');
+const PORT = process.env.PORT || 9000
 // let cors = require('cors');
 let User = require('./db/users');
 let bcrypt = require('bcryptjs');
@@ -8,7 +9,7 @@ let jwt = require('jsonwebtoken');
 let config = require('config');
 server.use(bd.json());
 server.use(bd.urlencoded());
-  
+
 const path = require('path')
 
 let companyController = require('./controllers/company');
@@ -190,17 +191,15 @@ server.post('/login', (req, res) => {
 
 });
 
-if (process.env.NODE_ENV === "production") {
-  // Express will serve up production assets
-  server.use(express.static('build'));
 
+
+  // Express will serve up production assets
+  server.use(express.static(path.join(__dirname, 'build')))
   // Express will serve up the front-end index.html file if it doesn't recognize the route
   app.get("*", (req, res) =>
     res.sendFile(path.resolve("build", "index.html"))
   );
-}
 
-const port = process.env.PORT || 9000;
 
 server.use((err, req, res, next)=>{
 
@@ -208,6 +207,6 @@ server.use((err, req, res, next)=>{
 
 })
 
-server.listen(port, function () {
+server.listen(PORT, function () {
   console.log('server started on 9000');
 });
